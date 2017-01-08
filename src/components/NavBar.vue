@@ -5,7 +5,7 @@
         <li><a href="asd">Test</a></li>
       </ul>
       <div class="nav-center">
-        {{ msg }}
+        {{msg}}
       </div>
     </nav>
   </heaer>

@@ -16,13 +16,20 @@ export default {
   name: 'app',
   data() {
     return {
+      API_ENDPOINT: '/api/v1/deployments',
       token: '',
     };
   },
   methods: {
 
-    fetchDeployments() {
-
+    fetchDeployments(token) {
+      fetch(`this.API_ENDPOINT?token=${token}`, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+        .then(res => res)
+        .catch(err => err);
     },
     _onSendToken(evt) {
       if (evt.keyCode === 13) {
