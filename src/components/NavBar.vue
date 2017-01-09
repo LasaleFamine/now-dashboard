@@ -1,12 +1,14 @@
 <template>
   <header>
     <nav class="grid -between">
-      <ul>
-        <li><a href="asd">Test</a></li>
-      </ul>
+
       <div class="nav-center">
         {{msg}}
       </div>
+
+      <!-- <ul>
+        <li><a href="asd">Test</a></li>
+      </ul> -->
     </nav>
   </heaer>
 </template>
@@ -16,7 +18,7 @@ export default {
   name: 'nav-bar',
   data() {
     return {
-      msg: 'Welcome to Your Vue.js App',
+      msg: 'Welcome to your Now dashboard',
     };
   },
 };
@@ -26,7 +28,7 @@ export default {
 <style scoped>
   header {
     margin: auto;
-    padding: 30px 0;
+    padding: 30px 1rem;
     position: relative;
     max-width: 70rem;
   }
