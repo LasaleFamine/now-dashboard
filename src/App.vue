@@ -6,6 +6,7 @@
       <div class="form-group">
         <input v-on:keypress="_onSendToken" v-model="token" class="form-control" placeholder="Your token" />
       </div>
+      <spinner :visible="showSpinner"></spinner>
       <grid :items="deployments"></grid>
   </div>
 </template>
@@ -14,6 +15,7 @@
 import NavBar from './components/NavBar';
 import Alert from './components/Alert';
 import Grid from './components/Grid';
+import Spinner from './components/Spinner';
 
 export default {
   name: 'app',
@@ -23,6 +25,7 @@ export default {
       token: '',
       deployments: [],
 
+      showSpinner: false,
       showAlert: false,
       typeAlert: '',
       msgAlert: '',
@@ -30,6 +33,7 @@ export default {
   },
   methods: {
     fetchDeployments(token) {
+      this.showSpinner = true;
       fetch(`${this.API_ENDPOINT}?token=${token}`, {
         headers: {
           'Content-Type': 'application/json',
@@ -41,9 +45,11 @@ export default {
             throw json;
           }
           this.setDeployments(json.deployments);
+          this.showSpinner = false;
         })
         .catch(err => {
-          this.setAlert(true, 'error', err.error);
+          this.setAlert(true, 'error', err.error || err.message);
+          this.showSpinner = false;
         });
     },
 
@@ -88,7 +94,7 @@ export default {
     },
   },
   components: {
-    NavBar, Alert, Grid,
+    NavBar, Alert, Grid, Spinner,
   },
 };
 </script>

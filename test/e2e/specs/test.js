@@ -12,8 +12,8 @@ module.exports = {
       .url(devServer)
       .waitForElementVisible('#app', 5000)
       .assert.elementPresent('.nav-center')
-      .assert.containsText('.nav-center', 'WELCOME TO YOUR VUE.JS APP')
-      .assert.elementCount('nav li', 1)
+      .assert.containsText('.nav-center', 'WELCOME TO YOUR NOW DASHBOARD')
+      .assert.elementCount('nav li', 0)
       .end();
   },
 };

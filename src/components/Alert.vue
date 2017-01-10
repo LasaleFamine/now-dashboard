@@ -9,9 +9,7 @@ export default {
   name: 'alert',
   props: ['msg', 'type', 'visible'],
   data() {
-    return {
-      test: 'ciao',
-    };
+    return {};
   },
   computed: {
     alertClass() {
