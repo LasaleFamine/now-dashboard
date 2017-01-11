@@ -1,5 +1,5 @@
 <template>
-  <div v-bind:class="alertWrapperClass">
+  <div v-on:click="_onClickAlert" v-bind:class="alertWrapperClass">
     <div v-bind:class="alertClass">{{msg}}</div>
   </div>
 </template>
@@ -25,6 +25,11 @@ export default {
     alertWrapperClass() {
       const hide = this.visible ? '' : 'hide';
       return hide;
+    },
+  },
+  methods: {
+    _onClickAlert() {
+      this.$emit('hide-alert');
     },
   },
 };
