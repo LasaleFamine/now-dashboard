@@ -11,7 +11,7 @@
             v-bind:data-id="item.uid"
             v-on:click="_onClickDelete"><i class="fa fa-trash"></i></a>
         </div>
-        <div class="confirm-button hide"><a>Confirm?</a></div>
+        <div v-on:click="_onClickConfirmDelete" class="confirm-button hide"><a>Confirm?</a></div>
       </div>
     </div>
   </div>
@@ -54,7 +54,9 @@ export default {
       this.showConfirmButton(id);
     },
     _onClickConfirmDelete() {
-
+      this.$emit('confirm-delete', this.currentSelectedUid);
+      this.currentSelectedUid = '';
+      this.hideEveryConfirmButton();
     },
   },
 };
