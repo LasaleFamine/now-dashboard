@@ -67,7 +67,6 @@ export default {
       this.hideEveryConfirmButton();
     },
     _onClickToggleDetail(target, id, showDetail) {
-      debugger;
       if (target.tagName === 'A' || target.tagName === 'I') {
         return false;
       }

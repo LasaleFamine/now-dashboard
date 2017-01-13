@@ -44,7 +44,6 @@ export default {
           if (json.error) {
             throw json;
           }
-          debugger;
           this.setFiles(id, json);
           this.toggleDetail(id);
           this.showSpinner = false;
@@ -132,7 +131,6 @@ export default {
 
 
     toggleDetail(id) {
-      debugger;
       const items = this.deployments.map(itm => {
         const newItem = itm;
         if (newItem.uid === id) {
