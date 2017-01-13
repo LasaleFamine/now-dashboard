@@ -21,7 +21,7 @@ export default {
   name: 'app',
   data() {
     return {
-      API_ENDPOINT: 'http://localhost:5000/api/v1/deployments',
+      API_ENDPOINT: '/api/v1/deployments',
       token: '',
       deployments: [],
 
