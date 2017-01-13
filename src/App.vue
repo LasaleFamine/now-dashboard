@@ -7,7 +7,7 @@
         <input v-on:keypress="_onSendToken" v-model="token" class="form-control" placeholder="Your token" type="password"/>
       </div>
       <spinner :visible="showSpinner"></spinner>
-      <grid :items="deployments" v-on:confirm-delete="_onConfirmDelete" ></grid>
+      <grid :items="deployments" v-on:confirm-delete="_onConfirmDelete" v-on:toggle-detail="_onToggleDetail"></grid>
   </div>
 </template>
 
@@ -21,7 +21,7 @@ export default {
   name: 'app',
   data() {
     return {
-      API_ENDPOINT: '/api/v1/deployments',
+      API_ENDPOINT: 'http://localhost:5000/api/v1/deployments',
       token: '',
       deployments: [],
 
@@ -32,6 +32,29 @@ export default {
     };
   },
   methods: {
+    fetchFiles(id) {
+      this.showSpinner = true;
+      fetch(`${this.API_ENDPOINT}/${id}/files?token=${this.token}`, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+        .then(res => res.json())
+        .then(json => {
+          if (json.error) {
+            throw json;
+          }
+          debugger;
+          this.setFiles(id, json);
+          this.toggleDetail(id);
+          this.showSpinner = false;
+        })
+        .catch(err => {
+          this.setAlert(true, 'error', err.error || err.message);
+          this.showSpinner = false;
+        });
+    },
+
     fetchDeployments() {
       this.showSpinner = true;
       fetch(`${this.API_ENDPOINT}?token=${this.token}`, {
@@ -79,8 +102,23 @@ export default {
     setDeployments(deployments) {
       const deps = deployments.map(deploy => {
         const dep = deploy;
+        dep.showDetail = false;
+        dep.files = [];
         dep.created = this.parseDate(dep.created);
         dep.url = 'https://'.concat(dep.url);
+        return dep;
+      });
+
+      this.deployments = deps;
+    },
+
+    setFiles(id, files) {
+      const deps = this.deployments.map(deploy => {
+        const dep = deploy;
+        if (deploy.uid === id) {
+          dep.files = files;
+        }
+
         return dep;
       });
 
@@ -90,6 +128,20 @@ export default {
     removeDeploy(id) {
       const deployments = this.deployments.filter(deploy => deploy.uid !== id);
       this.deployments = deployments;
+    },
+
+
+    toggleDetail(id) {
+      debugger;
+      const items = this.deployments.map(itm => {
+        const newItem = itm;
+        if (newItem.uid === id) {
+          newItem.showDetail = !newItem.showDetail;
+        }
+        return newItem;
+      });
+
+      this.deployments = items;
     },
 
     _onSendToken(evt) {
@@ -108,6 +160,16 @@ export default {
 
     _onHideAlert() {
       this.setAlert(false);
+    },
+
+    _onToggleDetail(id, showDetail) {
+      if (showDetail) {
+        this.toggleDetail(id);
+        return false;
+      }
+
+      this.fetchFiles(id);
+      return true;
     },
 
     parseDate(created) {

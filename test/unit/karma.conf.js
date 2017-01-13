@@ -54,7 +54,7 @@ module.exports = function (config) {
     },
     webpack: webpackConfig,
     webpackMiddleware: {
-      noInfo: true,
+      noInfo: false,
     },
     coverageReporter: {
       dir: './coverage',
