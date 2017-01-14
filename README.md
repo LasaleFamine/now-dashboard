@@ -22,6 +22,11 @@ At the time of writing I needed a dashboard to show my deployments of zeit's now
   - Show deployments (uid, name, url, creation date)
   - Delete deploy
 
+## Related
+
+API and server for this app
+- [hapi-now-dashboard](https://github.com/lasalefamine/hapi-now-dashboard)
+
 ## Usage
 
 ``` bash
