@@ -1,6 +1,8 @@
 # now-dashboard
 
-> Dashboard for Now deployments
+[![Build Status](https://travis-ci.org/LasaleFamine/now-dashboard.svg?branch=master)](https://travis-ci.org/LasaleFamine/now-dashboard)
+
+> Dashboard for [Now](https://zeit.co/now) deployments. Made with [vue-cli](https://github.com/vuejs/vue-cli).
 
 ## Why
 
