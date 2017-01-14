@@ -2,12 +2,25 @@
 
 [![Build Status](https://travis-ci.org/LasaleFamine/now-dashboard.svg?branch=master)](https://travis-ci.org/LasaleFamine/now-dashboard)
 
+<p align="center">
+  <a href="https://now-dashboard.now.sh">
+    <img src="now-dashboard.gif" alt="Now Dashboard"/>
+  </a>
+</p>
+
+---
+
 > Dashboard for [Now](https://zeit.co/now) deployments. Made with [vue-cli](https://github.com/vuejs/vue-cli).
 
 ## Why
 
 Project developed during the #100daysOfCode.
 At the time of writing I needed a dashboard to show my deployments of zeit's now and manage them.
+
+## Current features
+
+  - Show deployments (uid, name, url, creation date)
+  - Delete deploy
 
 ## Usage
 
@@ -34,10 +47,6 @@ $ yarn run e2e
 $ yarn test
 ```
 
-
-## Related
-
-	- [hapi-now-dashboard](https://github.com/lasalefamine/hapi-now-dashboard)
 
 ## License
 

@@ -8,6 +8,11 @@
       </div>
       <spinner :visible="showSpinner"></spinner>
       <grid :items="deployments" v-on:confirm-delete="_onConfirmDelete" v-on:toggle-detail="_onToggleDetail"></grid>
+      <footer class="footer">
+        <div class="grid -center">
+          <div><a href="https://github.com/lasalefamine/now-dashboard" target="_blank"><i class="fa fa-github"></i></div>
+        </div>
+      </footer>
   </div>
 </template>
 

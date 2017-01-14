@@ -29,3 +29,5 @@ node_modules
 
 reports
 npm-log
+selenium-debug
+.DS_Store
