@@ -32,9 +32,10 @@ export default {
     };
   },
   methods: {
-    fetchFiles(id) {
-      this.showSpinner = true;
-      fetch(`${this.API_ENDPOINT}/${id}/files?token=${this.token}`, {
+    fetchFiles(index) {
+      const uid = this.deployments[index].uid;
+      this.toggleDeploySpinner(index);
+      fetch(`${this.API_ENDPOINT}/${uid}/files?token=${this.token}`, {
         headers: {
           'Content-Type': 'application/json',
         },
@@ -44,13 +45,13 @@ export default {
           if (json.error) {
             throw json;
           }
-          this.setFiles(id, json);
-          this.toggleDetail(id);
-          this.showSpinner = false;
+          this.setFiles(index, json);
+          this.toggleDetail(index);
+          this.toggleDeploySpinner(index);
         })
         .catch(err => {
           this.setAlert(true, 'error', err.error || err.message);
-          this.showSpinner = false;
+          this.toggleDeploySpinner(index);
         });
     },
 
@@ -75,9 +76,10 @@ export default {
         });
     },
 
-    deleteDeploy(id) {
-      this.showSpinner = true;
-      fetch(`${this.API_ENDPOINT}/${id}?token=${this.token}`, {
+    deleteDeploy(index) {
+      const uid = this.deployments[index].uid;
+      this.toggleDeploySpinner(index);
+      fetch(`${this.API_ENDPOINT}/${uid}?token=${this.token}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -88,13 +90,13 @@ export default {
           if (json.error) {
             throw json;
           }
-          this.removeDeploy(id);
+          this.removeDeploy(index);
           this.setAlert(true, 'success', 'Deploy deleted!');
-          this.showSpinner = false;
+          // this.toggleDeploySpinner(index);
         })
         .catch(err => {
           this.setAlert(true, 'error', err.error || err.message);
-          this.showSpinner = false;
+          this.toggleDeploySpinner(index);
         });
     },
 
@@ -102,6 +104,7 @@ export default {
       const deps = deployments.map(deploy => {
         const dep = deploy;
         dep.showDetail = false;
+        dep.showSpinner = false;
         dep.files = [];
         dep.created = this.parseDate(dep.created);
         dep.url = 'https://'.concat(dep.url);
@@ -111,10 +114,10 @@ export default {
       this.deployments = deps;
     },
 
-    setFiles(id, files) {
-      const deps = this.deployments.map(deploy => {
+    setFiles(index, files) {
+      const deps = this.deployments.map((deploy, i) => {
         const dep = deploy;
-        if (deploy.uid === id) {
+        if (index === i) {
           dep.files = files;
         }
 
@@ -124,22 +127,18 @@ export default {
       this.deployments = deps;
     },
 
-    removeDeploy(id) {
-      const deployments = this.deployments.filter(deploy => deploy.uid !== id);
+    removeDeploy(index) {
+      const deployments = this.deployments.filter((deploy, i) => i !== index);
       this.deployments = deployments;
     },
 
 
-    toggleDetail(id) {
-      const items = this.deployments.map(itm => {
-        const newItem = itm;
-        if (newItem.uid === id) {
-          newItem.showDetail = !newItem.showDetail;
-        }
-        return newItem;
-      });
+    toggleDetail(index) {
+      this.deployments[index].showDetail = !this.deployments[index].showDetail;
+    },
 
-      this.deployments = items;
+    toggleDeploySpinner(index) {
+      this.deployments[index].showSpinner = !this.deployments[index].showSpinner;
     },
 
     _onSendToken(evt) {
@@ -152,21 +151,21 @@ export default {
       return true;
     },
 
-    _onConfirmDelete(id) {
-      this.deleteDeploy(id);
+    _onConfirmDelete(index) {
+      this.deleteDeploy(index);
     },
 
     _onHideAlert() {
       this.setAlert(false);
     },
 
-    _onToggleDetail(id, showDetail) {
+    _onToggleDetail(index, showDetail) {
       if (showDetail) {
-        this.toggleDetail(id);
+        this.toggleDetail(index);
         return false;
       }
 
-      this.fetchFiles(id);
+      this.fetchFiles(index);
       return true;
     },
 

@@ -1,17 +1,33 @@
 <template>
   <div class="">
-    <div v-for="item in items" class="items-table">
-      <div v-on:click="_onClickToggleDetail($event.target, item.uid, item.showDetail)" v-bind:id="item.uid" class="grid -between single-item">
-        <div>{{ item.uid }}</div>
+    <div v-for="(item, index) in items" class="items-table">
+      <div class="grid -between single-item"
+        v-on:click="_onClickToggleDetail($event.target, index, item.showDetail)"
+        v-bind:id="'deploy' + index" >
+        <div class="show-id">
+          <a v-on:click="_onClickToggleShowId(index, true)">Show ID</a>
+        </div>
+        <div class="item-id hide">
+          <a v-on:click="_onClickToggleShowId(index, false)">{{ item.uid }}</a>
+        </div>
         <div>{{ item.name }}</div>
-        <div><a v-bind:title="item.url" v-bind:href="item.url" target="_blank">{{ computeUrlText(item.url) }} <i class="fa fa-external-link"></i></a></div>
+        <div>
+          <a v-bind:title="item.url" v-bind:href="item.url" target="_blank">
+            {{ computeUrlText(item.url) }}
+            <i class="fa fa-external-link"></i>
+          </a>
+        </div>
         <div>{{ item.created }}</div>
         <div class="delete-icon">
           <a
-            v-bind:data-id="item.uid"
-            v-on:click="_onClickDelete"><i class="fa fa-trash"></i></a>
+            v-on:click="_onClickDelete(index)">
+            <i class="fa fa-trash"></i>
+          </a>
         </div>
-        <div v-on:click="_onClickConfirmDelete" class="confirm-button hide"><a>Confirm?</a></div>
+        <div v-on:click="_onClickConfirmDelete" class="confirm-button hide">
+          <a>Confirm?</a>
+        </div>
+        <spinner :visible="item.showSpinner"></spinner>
       </div>
       <transition name="fade">
         <div v-if="item.showDetail" class="grid">
@@ -25,12 +41,14 @@
 </template>
 
 <script>
+import Spinner from './Spinner';
+
 export default {
   name: 'grid',
   props: ['items'],
   data() {
     return {
-      currentSelectedUid: '',
+      currentSelectedIndex: '',
     };
   },
   methods: {
@@ -38,42 +56,51 @@ export default {
       return url.replace('https://', '').replace('.now.sh', '');
     },
 
-    showConfirmButton(id) {
-      document.querySelector(`#${id} .delete-icon`).classList.add('hide');
-      document.querySelector(`#${id} .confirm-button`).classList.remove('hide');
+    showConfirmButton(index) {
+      this.$el.querySelector(`#deploy${index} .delete-icon`).classList.add('hide');
+      this.$el.querySelector(`#deploy${index} .confirm-button`).classList.remove('hide');
     },
 
     hideEveryConfirmButton() {
-      if (this.currentSelectedUid === '') {
+      if (this.currentSelectedIndex === '') {
         return false;
       }
-
-      document.querySelector(`#${this.currentSelectedUid} .confirm-button`).classList.add('hide');
-      document.querySelector(`#${this.currentSelectedUid} .delete-icon`).classList.remove('hide');
+      const index = this.currentSelectedIndex;
+      this.$el.querySelector(`#deploy${index} .confirm-button`).classList.add('hide');
+      this.$el.querySelector(`#deploy${index} .delete-icon`).classList.remove('hide');
       return true;
     },
 
-    _onClickDelete(evt) {
-      this.hideEveryConfirmButton();
+    _onClickToggleShowId(index, show) {
+      const toHide = show ? '.show-id' : '.item-id';
+      const toShow = show ? '.item-id' : '.show-id';
+      this.$el.querySelector(`#deploy${index} ${toHide}`).classList.add('hide');
+      this.$el.querySelector(`#deploy${index} ${toShow}`).classList.remove('hide');
+      return true;
+    },
 
-      const id = evt.currentTarget.dataset.id;
-      this.currentSelectedUid = id;
-      this.showConfirmButton(id);
+    _onClickDelete(index) {
+      this.hideEveryConfirmButton();
+      this.currentSelectedIndex = index;
+      this.showConfirmButton(index);
     },
     _onClickConfirmDelete() {
-      const currentId = this.currentSelectedUid;
-      this.$emit('confirm-delete', currentId);
-      this.currentSelectedUid = '';
+      const currentIndex = this.currentSelectedIndex;
+      this.$emit('confirm-delete', currentIndex);
       this.hideEveryConfirmButton();
+      this.currentSelectedIndex = '';
     },
-    _onClickToggleDetail(target, id, showDetail) {
+    _onClickToggleDetail(target, name, showDetail) {
       if (target.tagName === 'A' || target.tagName === 'I') {
         return false;
       }
 
-      this.$emit('toggle-detail', id, showDetail);
+      this.$emit('toggle-detail', name, showDetail);
       return true;
     },
+  },
+  components: {
+    Spinner,
   },
 };
 </script>
